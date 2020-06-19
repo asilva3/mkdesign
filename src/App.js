@@ -6,6 +6,8 @@ import TableHead from '@material-ui/core/TableHead';
 import TableRow from '@material-ui/core/TableRow';
 import './App.css';
 
+require("dotenv").config()
+
 export default class App extends Component {
   constructor(props) {
     super(props);
@@ -18,7 +20,7 @@ export default class App extends Component {
 
   async getData(event) {
       event.preventDefault();
-      fetch('https://fwuloepxjl.execute-api.us-west-2.amazonaws.com/prod/getuserprofile')
+      fetch(process.env.REACT_APP_URL)
       .then((response) => {
         return response.json();
       })

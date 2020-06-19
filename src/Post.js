@@ -1,78 +1,90 @@
-import React, { Component } from 'react';
+import React from 'react';
 import TextField from '@material-ui/core/TextField';
 import Alert from '@material-ui/lab/Alert';
 import './App.css';
 
+const sendEmail = require('./sendEmail')
+
 export default class Post extends React.Component{
+	/*
+	 *  Constructor's Variables
+	 *  @param {bool} success : determines whether POST was successful
+	 *  @param {bool} error   : catches Error of POST
+	 *  @param {Object{bool, bool, bool}} errorMessage{email, name, message} : validation for each field
+	 *  @param {string} email : The email input
+	 *  @param {string} name : The name input
+	 *  @param {string} message : The message input
+	*/
 	constructor(props) {
 	    super(props);
 	    this.state = {
 	    	success: false,
 	    	error: false,
-	    	errorMessage: '',
+	    	errorMessage: {
+	    		email: false,
+	    		name: false,
+	    		message: false
+	    	},
 	    	email: '',
 	    	name: '',
-	    	message: '',
-	    	subject: "subject",
-	    	body: "body",
+	    	message: ''
 	    };
 	    this.handleSubmit = this.handleSubmit.bind(this);
 	    this.handleChange = this.handleChange.bind(this);
-	    this.sendEmail = this.sendEmail.bind(this);
 	}
 
-	sendEmail (subject, body) {
-	  return fetch('https://pfc8jwz0t1.execute-api.us-west-2.amazonaws.com/Production/submit', {
-	    method: 'POST',
-	    headers: {
-	      'Accept': 'application/json',
-	      'Content-Type': 'application/json'
-	    },
-	    body: JSON.stringify({ subject, body })
-	  })
+	/*
+	 *  Helper Function's Variables
+	 *  @param {string} inputValue : Object's value
+	 *  @param {string} stateField : Object's name
+	*/
+	handleChange(event) {
+		const inputValue = event.target.value;
+	    const stateField = event.target.name;
+	    this.setState({
+	      [stateField]: inputValue,
+	    });
+	    //console.log(this.state);
 	}
-
-  handleChange(event) {
-    const inputValue = event.target.value;
-    const stateField = event.target.name;
-    this.setState({
-      [stateField]: inputValue,
-    });
-    console.log(this.state);
-  }
 
   validate(event){
     var hasErrors = false;
-    const inputValue = event.target.value;
-    const stateFieldemail = event.target.email.name;
+    const stateFieldemail = event.target.email;
     const stateFieldname = event.target.name.name;
     const stateFieldmessage = event.target.message.name;
     const { email, name, message } = this.state;
-    console.log("This is the email: " + stateFieldname);
+    let errorMessage = this.state.errorMessage;
+
     if (!(/^[a-zA-Z0-9]+@[a-zA-Z0-9]+\.[A-Za-z]+$/.test(email))){
       hasErrors = true;
+      errorMessage.email = true;
       this.setState({
-      	errorMessage: "The Email Entered is not Valid",
+      	[stateFieldemail.name] : stateFieldemail.value,
       })
+    }else{
+    	errorMessage.email = false;
     }
-
-    if ( name < 1){
+    if (name < 1){
       hasErrors = true;
+      errorMessage.name = true;
       this.setState({
       	[stateFieldname]: "Must Enter a Name",
       })
+    }else{
+    	errorMessage.name = false;
     }
 
-    if ( message < 1){
+    if (message < 1){
       hasErrors = true;
+      errorMessage.message = true;
       this.setState({
       	[stateFieldmessage]: "Must Enter a Message",
       })
+    }else{
+    	errorMessage.message = false;
     }
-
     return !hasErrors;
   }
-
 
   async handleSubmit(event) {
     event.preventDefault();
@@ -81,7 +93,7 @@ export default class Post extends React.Component{
     }
     const { email, name, message } = this.state;
     console.log('onSubmit state', this.state);
-    fetch('https://fwuloepxjl.execute-api.us-west-2.amazonaws.com/prod/getuserprofile', {
+    fetch(process.env.REACT_APP_URL, {
 	      method: 'POST',
 	      headers: {
 	        'Accept': 'application/json',
@@ -95,8 +107,8 @@ export default class Post extends React.Component{
       })
       .then(response => response.json())
       .then(data => {
-        console.log('Success:', data);
-        this.sendEmail("body", "body");
+        //console.log('Success:', data);
+        sendEmail("body", message);
         this.setState(state => ({
         	success: true
         }));
@@ -105,11 +117,23 @@ export default class Post extends React.Component{
       	this.setState(state => ({
       		error: true
       	}));
-        console.error('Error:', error);
+        //console.error('Error:', error);
       });
   }
-
+  
 	render(){
+		const errorMessage = this.state.errorMessage;
+		let emailerrorbutton;
+		if(errorMessage.email){
+			emailerrorbutton = <Alert severity="error">Please enter a valid Email</Alert>	
+		}
+		if(errorMessage.name){
+			emailerrorbutton = <Alert severity="error">Please Enter a Name</Alert>	
+		}
+		if(errorMessage.message){
+			emailerrorbutton = <Alert severity="error">Please Enter a Message</Alert>	
+		}
+
 		if(!this.state.success && !this.state.error){
 			return(
 				<div>
@@ -123,8 +147,8 @@ export default class Post extends React.Component{
 		        <div>
 		        	<TextField name="message" label="Message" onChange={this.handleChange} value={this.state.message} variant="outlined" />
 		        </div>
-		        {this.state.errorMessage ? <Alert severity="error">{this.state.errorMessage}</Alert> : null}
-		          <button type="submit">Send</button>
+		        {emailerrorbutton}
+		        <button type="submit">Send</button>
 		        </form>
 		      </div>
 			)	
