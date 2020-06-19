@@ -1,7 +1,7 @@
-##Project Outline 
+## Project Outline 
 Build a website contact form. The form should contain fields for Name, Email and message at a minimum. Upon submit, the form should send the message to the email provided in the form, with the name as the email subject.
 
-##Projet Requirements
+## Projet Requirements
 1. Set up a free account with Amazon Web Services (AWS)(https://aws.amazon.com/) 
 2. Using Material UI, Build a form (name, email, message, submit button). The page 
 must be a static website, hosted in an S3 bucket. Ensure proper field level validation (E.g. Please enter a name.) and action confirmation user experiences are properly handled. 
@@ -9,29 +9,29 @@ must be a static website, hosted in an S3 bucket. Ensure proper field level vali
 4. The Lambda function should send an email using SES, and store the message in 
 DynamoDB.
 
-##Directory
--public
-	-favico.ico
-	- index.html
-	- logo192.png
-	- logo512.png
-	- manifest.json
-	- robots.txt
--src
-	- App.css
-	- App.js
-	- App.test.js
-	- Post.js
-	- index.css
-	- index.js
-	- logo.svg
-	- sendEmail.js
-	- serviceWorker.js
-	- setupTest.js
-.gitignore
--README.md
--package.json
-
+## Directory
+```bash
+├── README.md
+├── package.json
+├── public
+│   ├── favicon.ico
+│   ├── index.html
+│   ├── logo192.png
+│   ├── logo512.png
+│   ├── manifest.json
+│   └── robots.txt
+└── src
+    ├── App.css
+    ├── App.js
+    ├── App.test.js
+    ├── Post.js
+    ├── index.css
+    ├── index.js
+    ├── logo.svg
+    ├── sendEmail.js
+    ├── serviceWorker.js
+    └── setupTests.js
+``` 
 ## Available Scripts
 
 In the project directory, you can run:
