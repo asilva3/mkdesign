@@ -48,6 +48,9 @@ export default class App extends Component {
     } else {
       return (
         <div>
+        <form onSubmit={this.getData}>
+          <Button variant="outlined" color="primary" type="submit" value="View Clients">Reload Clients</Button>
+        </form>
           <Table id="employeeProfile">
 
         <TableHead>

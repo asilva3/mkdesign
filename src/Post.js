@@ -114,7 +114,7 @@ export default class Post extends React.Component{
       .then(response => response.json())
       .then(data => {
         //console.log('Success:', data);
-        sendEmail("body", message);
+        sendEmail(name, message);
         this.setState(state => ({
         	success: true
         }));
@@ -129,7 +129,7 @@ export default class Post extends React.Component{
 
 	render(){
 		const errorMessage = this.state.errorMessage;
-		let containerErrors, emailerrorbutton, nameErrorButton, messageErrorButton;
+		let containerErrors, emailerrorbutton, nameErrorButton, messageErrorButton, successButton;
 		if(errorMessage.email){
 			emailerrorbutton = <Alert severity="error">Please enter a valid Email</Alert>	
 		}
@@ -139,9 +139,12 @@ export default class Post extends React.Component{
 		if(errorMessage.message){
 			messageErrorButton = <Alert severity="error">Please Enter a Message</Alert>	
 		}
+		if(this.state.success){
+			successButton = <Alert severity="success">Thank you for signing up!</Alert>
+		}
 		containerErrors = [emailerrorbutton, nameErrorButton, messageErrorButton];
 
-		if(!this.state.success && !this.state.error){
+		if(!this.state.error){
 			return(
 				<div>
 		        <form onSubmit={this.handleSubmit}>
@@ -157,18 +160,12 @@ export default class Post extends React.Component{
 		        { containerErrors.map(function(item, index){
 		        	return <div key={index}>{item}</div>
 		        })}
+		        {successButton}
 		        <Box m={2}>
 		        	<Button variant="outlined" color="primary" type="submit">Send</Button>
 		        </Box>
 		        </form>
 		      </div>
-			)	
-		}
-		else if(this.state.success){
-			return(
-				<div>
-					<h1>Success</h1>
-				</div>
 			)	
 		}
 		else{
