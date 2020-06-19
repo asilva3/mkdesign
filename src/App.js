@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import Table from '@material-ui/core/Table';
+import Button from '@material-ui/core/Button';
 import TableBody from '@material-ui/core/TableBody';
 import TableCell from '@material-ui/core/TableCell';
 import TableHead from '@material-ui/core/TableHead';
@@ -42,7 +43,7 @@ export default class App extends Component {
     let { dataSource } = this.state;
     if (this.state.isLoading) {
       return <form onSubmit={this.getData}>
-                <input type="submit" value="View Clients" />
+                <Button variant="outlined" color="primary" type="submit" value="View Clients">View Clients</Button>
               </form>;
     } else {
       return (

@@ -1,6 +1,8 @@
 import React from 'react';
 import TextField from '@material-ui/core/TextField';
+import Button from '@material-ui/core/Button';
 import Alert from '@material-ui/lab/Alert';
+import Box from '@material-ui/core/Box';
 import './App.css';
 
 const sendEmail = require('./sendEmail')
@@ -47,44 +49,48 @@ export default class Post extends React.Component{
 	    //console.log(this.state);
 	}
 
-  validate(event){
-    var hasErrors = false;
-    const stateFieldemail = event.target.email;
-    const stateFieldname = event.target.name.name;
-    const stateFieldmessage = event.target.message.name;
-    const { email, name, message } = this.state;
-    let errorMessage = this.state.errorMessage;
+	validate(event){
+	    var hasErrors = false;
+	    const stateFieldemail = event.target.email;
+	    const stateFieldname = event.target.name;
+	    const stateFieldmessage = event.target.message;
+	    const { email, name, message } = this.state;
+	    let errorMessage = this.state.errorMessage;
 
-    if (!(/^[a-zA-Z0-9]+@[a-zA-Z0-9]+\.[A-Za-z]+$/.test(email))){
-      hasErrors = true;
-      errorMessage.email = true;
-      this.setState({
-      	[stateFieldemail.name] : stateFieldemail.value,
-      })
-    }else{
-    	errorMessage.email = false;
-    }
-    if (name < 1){
-      hasErrors = true;
-      errorMessage.name = true;
-      this.setState({
-      	[stateFieldname]: "Must Enter a Name",
-      })
-    }else{
-    	errorMessage.name = false;
-    }
+	    //email validation
+	    if (!(/^[a-zA-Z0-9]+@[a-zA-Z0-9]+\.[A-Za-z]+$/.test(email))){
+	      hasErrors = true;
+	      errorMessage.email = true;
+	      this.setState({
+	      	[stateFieldemail.name] : stateFieldemail.value,
+	      })
+	    }else{
+	    	errorMessage.email = false;
+	    }
 
-    if (message < 1){
-      hasErrors = true;
-      errorMessage.message = true;
-      this.setState({
-      	[stateFieldmessage]: "Must Enter a Message",
-      })
-    }else{
-    	errorMessage.message = false;
-    }
-    return !hasErrors;
-  }
+	    //name validation
+	    if (name < 1){
+	      hasErrors = true;
+	      errorMessage.name = true;
+	      this.setState({
+	      	[stateFieldname.name]: stateFieldname.value,
+	      })
+	    }else{
+	    	errorMessage.name = false;
+	    }
+
+	    //message validation
+	    if (message < 1){
+	      hasErrors = true;
+	      errorMessage.message = true;
+	      this.setState({
+	      	[stateFieldmessage.name]: stateFieldmessage.value,
+	      })
+	    }else{
+	    	errorMessage.message = false;
+	    }
+	    return !hasErrors;
+	}
 
   async handleSubmit(event) {
     event.preventDefault();
@@ -120,35 +126,40 @@ export default class Post extends React.Component{
         //console.error('Error:', error);
       });
   }
-  
+
 	render(){
 		const errorMessage = this.state.errorMessage;
-		let emailerrorbutton;
+		let containerErrors, emailerrorbutton, nameErrorButton, messageErrorButton;
 		if(errorMessage.email){
 			emailerrorbutton = <Alert severity="error">Please enter a valid Email</Alert>	
 		}
 		if(errorMessage.name){
-			emailerrorbutton = <Alert severity="error">Please Enter a Name</Alert>	
+			nameErrorButton = <Alert severity="error">Please Enter a Name</Alert>	
 		}
 		if(errorMessage.message){
-			emailerrorbutton = <Alert severity="error">Please Enter a Message</Alert>	
+			messageErrorButton = <Alert severity="error">Please Enter a Message</Alert>	
 		}
+		containerErrors = [emailerrorbutton, nameErrorButton, messageErrorButton];
 
 		if(!this.state.success && !this.state.error){
 			return(
 				<div>
 		        <form onSubmit={this.handleSubmit}>
-		        <div>
+		        <Box m={2}>
 		        	<TextField required name="email" label="Email" onChange={this.handleChange} value={this.state.email} variant="outlined" />
-		        </div>
-		        <div>
-		        	<TextField name="name" label="Name" onChange={this.handleChange} value={this.state.name} variant="outlined" />
-		        </div>
-		        <div>
-		        	<TextField name="message" label="Message" onChange={this.handleChange} value={this.state.message} variant="outlined" />
-		        </div>
-		        {emailerrorbutton}
-		        <button type="submit">Send</button>
+		        </Box>
+		        <Box m={2}>
+		        	<TextField required name="name" label="Name" onChange={this.handleChange} value={this.state.name} variant="outlined" />
+		        </Box>
+		        <Box m={2}>
+		        	<TextField required name="message" label="Message" onChange={this.handleChange} value={this.state.message} variant="outlined" />
+		        </Box>
+		        { containerErrors.map(function(item, index){
+		        	return <div key={index}>{item}</div>
+		        })}
+		        <Box m={2}>
+		        	<Button variant="outlined" color="primary" type="submit">Send</Button>
+		        </Box>
 		        </form>
 		      </div>
 			)	
