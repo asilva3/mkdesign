@@ -56,9 +56,11 @@ export default class Post extends React.Component{
 	    const stateFieldmessage = event.target.message;
 	    const { email, name, message } = this.state;
 	    let errorMessage = this.state.errorMessage;
+	    //used from https://learnetto.com/blog/react-form-validation
+	    const expression = /^([\w.%+-]+)@([\w-]+\.)+([\w]{2,})$/i
 
 	    //email validation
-	    if (!(/^[a-zA-Z0-9]+@[a-zA-Z0-9]+\.[A-Za-z]+$/.test(email))){
+	    if (!(expression.test(email))){
 	      hasErrors = true;
 	      errorMessage.email = true;
 	      this.setState({
@@ -120,10 +122,10 @@ export default class Post extends React.Component{
         }));
       })
       .catch((error) => {
+      	//console.error('Error:', error);
       	this.setState(state => ({
       		error: true
       	}));
-        //console.error('Error:', error);
       });
   }
 
