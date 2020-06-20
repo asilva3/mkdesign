@@ -114,7 +114,7 @@ export default class Post extends React.Component{
       .then(response => response.json())
       .then(data => {
         //console.log('Success:', data);
-        sendEmail(name, message);
+        sendEmail(name, message, email);
         this.setState(state => ({
         	success: true
         }));
